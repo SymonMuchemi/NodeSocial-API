@@ -11,7 +11,6 @@ a basic social media feed where users can register, log in, post updates, like p
 - [] Follow and unfollow users
 - [] View posts from followed users
 
-
 ## Technologies Used
 
 - [Node.js](https://nodejs.org/en/)
@@ -22,4 +21,3 @@ a basic social media feed where users can register, log in, post updates, like p
 - [bcrypt](https://www.npmjs.com/package/bcrypt)
 - [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 - [dotenv](https://www.npmjs.com/package/dotenv)
-
