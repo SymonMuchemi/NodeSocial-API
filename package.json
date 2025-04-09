@@ -1,9 +1,0 @@
-{
-	"dependencies": {
-		"express": "^5.1.0",
-		"apollo-server-express": "^3.13.0",
-		"graphql": "^16.10.0",
-		"prisma": "^6.6.0",
-		"@prisma/client": "^6.6.0"
-	}
-}
