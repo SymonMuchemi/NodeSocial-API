@@ -25,3 +25,7 @@ a basic social media feed where users can register, log in, post updates, like p
 - [GitHub Actions](https://docs.github.com/en/actions) - CI/CD pipeline for testing and deploying the application.
 - [Docker](https://www.docker.com/) - Containerization platform for deploying the application.
 - [Redis](https://redis.io/) - In-memory data structure store for caching.
+
+## Database Design
+
+![Database Design](./nodesocial_db_design.drawio.png)
