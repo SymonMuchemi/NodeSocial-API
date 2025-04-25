@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: devcamper
+    ports:
+      - '3001:3001'
+
+volumes:
+  redis_data:
+    driver: local
