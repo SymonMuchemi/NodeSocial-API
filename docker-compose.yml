@@ -3,7 +3,7 @@ version: '3.8'
 services:
   app:
     build: .
-    container_name: devcamper
+    container_name: nodesocial
     ports:
       - '3001:3001'
 
