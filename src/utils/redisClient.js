@@ -27,9 +27,9 @@ class RedisClient {
 
       // connect to redis
       await this.client.connect();
-      console.log('Redis connection succeeded!'.green.inverse);
+      console.log('Redis connection succeeded!');
     } catch (err) {
-      console.log(`Redis connection error: ${err.message}`.red);
+      console.log(`Redis connection error: ${err.message}`);
     }
   }
 

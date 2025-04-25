@@ -1,5 +1,4 @@
 const express = require('express');
-const color = require('colors');
 const dotenv = require('dotenv');
 
 const { connectDB } = require('./config/db.js');
@@ -23,7 +22,7 @@ app.get('/', (req, res) => {
 });
 
 const server = app.listen(PORT, () => {
-  console.log(`App running in mode at http://127.0.0.1:${PORT}`.yellow.bold);
+  console.log(`App running in mode at http://127.0.0.1:${PORT}`);
 });
 
 process.on('unhandledRejection', (err, promise) => {
