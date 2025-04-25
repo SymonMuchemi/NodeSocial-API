@@ -3,7 +3,6 @@ const color = require('colors');
 const dotenv = require('dotenv');
 
 const { connectDB } = require('./config/db.js');
-const { getSecret } = require('./utils/getSecrets');
 
 const app = express();
 const PORT = 3001;
