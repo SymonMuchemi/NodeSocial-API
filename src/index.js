@@ -19,7 +19,7 @@ if (NODE_ENV === 'development') {
 
 // healthcheck
 app.get('/', (req, res) => {
-  res.send('Hello from Nodesocial API');
+  res.status(200).json({ message: 'Hello from Nodesocial API' });
 });
 
 const server = app.listen(PORT, () => {
@@ -31,3 +31,5 @@ process.on('unhandledRejection', (err, promise) => {
 
   server.close(() => process.exit(1));
 });
+
+module.exports = app;
