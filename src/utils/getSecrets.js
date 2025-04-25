@@ -21,6 +21,8 @@ let cachedSecrets = null;
  * @throws {Error} If the secret string is empty or the specified key is not present in the secrets.
  */
 exports.getSecret = async (key) => {
+  if (key === '') throw new Error('Secret string must not be empty!');
+
   // If cached, return from memory
   if (cachedSecrets && cachedSecrets[key]) {
     return cachedSecrets[key];
@@ -47,4 +49,11 @@ exports.getSecret = async (key) => {
   }
 
   return cachedSecrets[key];
+};
+
+/**
+ * Resets the cached secrets (for testing purposes).
+ */
+exports.resetCache = () => {
+  cachedSecrets = null;
 };
