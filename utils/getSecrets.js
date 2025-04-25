@@ -9,6 +9,8 @@ const client = new SecretsManagerClient({
   region: 'eu-north-1',
 });
 
+let cachedSecrets = null;
+
 /**
  * Retrieves a specific secret value from AWS Secrets Manager.
  *
@@ -19,26 +21,30 @@ const client = new SecretsManagerClient({
  * @throws {Error} If the secret string is empty or the specified key is not present in the secrets.
  */
 exports.getSecret = async (key) => {
-  const response = await client.send(
-    new GetSecretValueCommand({
+  // If cached, return from memory
+  if (cachedSecrets && cachedSecrets[key]) {
+    return cachedSecrets[key];
+  }
+
+  // If cache not available, fetch from AWS
+  if (!cachedSecrets) {
+    const command = new GetSecretValueCommand({
       SecretId: secret_name,
       VersionStage: 'AWSCURRENT',
-    })
-  );
+    });
 
-  try {
-    const secrets = response.SecretString;
+    const response = await client.send(command);
 
-    if (!secrets) throw new Error('Secret string is EMPTY!!');
+    if (!response.SecretString) {
+      throw new Error('Secret string is EMPTY!!');
+    }
 
-    const secretsJson = await JSON.parse(secrets);
-
-    if (!Object.prototype.hasOwnProperty.call(secretsJson, key))
-      throw new Error(`${key} not present in secrets`);
-
-    return secretsJson[key];
-  } catch (error) {
-    console.error(error);
-    throw new Error(error.message);
+    cachedSecrets = JSON.parse(response.SecretString);
   }
+
+  if (!Object.prototype.hasOwnProperty.call(cachedSecrets, key)) {
+    throw new Error(`Key "${key}" not present in secrets`);
+  }
+
+  return cachedSecrets[key];
 };

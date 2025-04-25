@@ -1,37 +1,55 @@
 const { createClient } = require('redis');
 const { getSecret } = require('./getSecrets.js');
 
-let redisClient;
+class RedisClient {
+  constructor() {
+    this.client = null;
+    this.initialize();
+  }
 
-async function initRedisClient() {
-  const username = await getSecret('REDIS_USERNAME');
-  const password = await getSecret('REDIS_PASSWORD');
-  const host = await getSecret('REDIS_HOST');
-  const port = parseInt(await getSecret('REDIS_PORT'), 10);
+  async initialize() {
+    try {
+      const [username, password, host, port] = await Promise.all([
+        getSecret('REDIS_USERNAME'),
+        getSecret('REDIS_PASSWORD'),
+        getSecret('REDIS_HOST'),
+        getSecret('REDIS_PORT'),
+      ]);
 
-  const client = createClient({
-    username,
-    password,
-    socket: {
-      host,
-      port,
-    },
-  });
+      this.client = createClient({
+        username,
+        password,
+        socket: {
+          host,
+          port,
+        },
+      });
 
-  client
-    .connect()
-    .then(() => console.log('Redis connection succeeded!'.green.inverse))
-    .catch((err) => console.log(`Redis connection error: ${err}`.red.bold));
+      // connect to redis
+      await this.client.connect();
+      console.log('Redis connection succeeded!'.green.inverse);
+    } catch (err) {
+      console.log(`Redis connection error: ${err.message}`.red.inverse);
+    }
+  }
 
-  return client;
+  isAlive() {
+    return this.client && this.client.isReady;
+  }
+
+  async get(key) {
+    if (!this.client) throw new Error('Redis client not initialized');
+
+    return this.client.get(key);
+  }
+
+  async set(key, val, exp = 3600) {
+    if (!this.client) throw new Error('Redis client not initialized');
+
+    return this.client.set(key, val, { EX: exp });
+  }
 }
 
-(async () => {
-  redisClient = await initRedisClient();
-})();
+const redisClient = new RedisClient();
 
-module.exports = {
-  isAlive: () => redisClient.isReady,
-  get: (key) => redisClient.get(key),
-  set: (key, val, exp = 3600) => redisClient.set(key, val, { EX: exp }),
-};
+module.exports = redisClient;
