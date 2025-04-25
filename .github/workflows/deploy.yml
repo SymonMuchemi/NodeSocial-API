@@ -1,0 +1,46 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    env:
+      DEPLOY_PATH: '/home/ubuntu/NodeSocial-API'
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Ensure Repository Exists
+        run: |
+          if [ ! -d "$DEPLOY_PATH" ]; then
+              git clone https://github.com/SymonMuchemi/NodeSocial-API.git $DEPLOY_PATH
+          fi
+
+      - name: Stop and remove existing containers
+        run: |
+          cd $DEPLOY_PATH
+          sudo docker-compose down || true
+
+      - name: Pull latest changes
+        run: |
+          cd $DEPLOY_PATH
+          git pull origin main
+      
+      - name: Check for tests
+        run: |
+          cd $DEPLOY_PATH
+          if [ -f "package.json" ]; then
+            npm install
+            npm test
+          fi
+
+      - name: Build and start containers
+        run: |
+          cd $DEPLOY_PATH
+          sudo docker compose up --build -d
