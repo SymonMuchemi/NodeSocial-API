@@ -4,7 +4,7 @@ const { getSecret } = require('./getSecrets.js');
 class RedisClient {
   constructor() {
     this.client = null;
-    this.initialize();
+    this.initialized = this.initialize();
   }
 
   async initialize() {
@@ -29,7 +29,7 @@ class RedisClient {
       await this.client.connect();
       console.log('Redis connection succeeded!'.green.inverse);
     } catch (err) {
-      console.log(`Redis connection error: ${err.message}`.red.inverse);
+      console.log(`Redis connection error: ${err.message}`.red);
     }
   }
 
