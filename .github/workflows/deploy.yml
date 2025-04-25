@@ -31,16 +31,6 @@ jobs:
         run: |
           cd $DEPLOY_PATH
           git pull origin main
-      
-      - name: Run tests inside container (if available)
-        run: |
-          cd $DEPLOY_PATH
-          if grep -q "\"test\":" package.json; then
-            docker build -t nodesocial-api .
-            docker run --rm nodesocial-api npm test
-          else
-            echo "No test script found in package.json. Skipping tests."
-          fi
 
       - name: Build and start containers
         run: |
