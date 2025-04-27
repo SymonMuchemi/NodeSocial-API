@@ -8,5 +8,7 @@
  * @returns {Function} A middleware function that executes the provided
  *                     asynchronous function and catches any errors.
  */
-exports.asyncHandler = (fn) => (req, res, next) =>
+const asyncHandler = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
+
+module.exports = asyncHandler;
