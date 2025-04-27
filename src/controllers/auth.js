@@ -7,13 +7,8 @@ const crypto = require('crypto');
 // @route   POST /api/v1/auth/register
 // @access  Public
 exports.register = asyncHandler(async (req, res, next) => {
-  const { name, email, password, role } = req.body;
-
   const user = await User.create({
-    name,
-    email,
-    password,
-    role,
+    ...req.body,
   });
 
   // TODO: implement email feature with AWS Lamda

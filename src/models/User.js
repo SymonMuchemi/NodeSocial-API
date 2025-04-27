@@ -1,4 +1,9 @@
 const { Schema, model } = require('mongoose');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const { getSecret } = require('../utils/getSecrets');
+const ErrorResponse = require('../utils/errorResponse');
 
 const UserSchema = Schema(
   {
@@ -21,6 +26,11 @@ const UserSchema = Schema(
       required: [true, 'Please add a password'],
       minlength: 6,
       select: false,
+    },
+    role: {
+      type: String,
+      enum: ['user', 'publisher'],
+      default: 'user',
     },
     followers: [
       {
@@ -58,7 +68,13 @@ UserSchema.pre('save', async function (next) {
 });
 
 // sign JWT token and return
-UserSchema.methods.getSignedJwtToken = function () {
+UserSchema.methods.getSignedJwtToken = async function () {
+  const JWT_SECRET = await getSecret('JWT_SECRET');
+  const JWT_EXPIRE = await getSecret('JWT_EXPIRE');
+
+  if (!JWT_SECRET) throw new ErrorResponse('JWT secret anavailable');
+  if (!JWT_EXPIRE) throw new ErrorResponse('JWT EXPIRE anavailable');
+
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
   });

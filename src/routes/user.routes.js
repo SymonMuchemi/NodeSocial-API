@@ -5,7 +5,7 @@ const {
   createUser,
   updateUser,
   deleteUser,
-} = require('../controllers/users');
+} = require('../controllers/user');
 const advancedResults = require('../middleware/advancedResults');
 
 // import protect middleware

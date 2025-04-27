@@ -2,6 +2,11 @@ const express = require('express');
 const dotenv = require('dotenv');
 
 const { connectDB } = require('./config/db.js');
+const errorHandler = require('./middleware/error.js');
+
+// Import routes
+const userRouter = require('./routes/user.routes.js');
+const authRouter = require('./routes/auth.routes.js');
 
 const app = express();
 const PORT = 3001;
@@ -15,6 +20,13 @@ if (NODE_ENV === 'development') {
 
   app.use(morgan('dev'));
 }
+
+app.use(express.json());
+
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/users', userRouter);
+
+app.use(errorHandler);
 
 // healthcheck
 app.get('/', (req, res) => {
