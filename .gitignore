@@ -137,3 +137,4 @@ dist
 
 # drawio
 **.drawio.bkp
+.vscode/settings.json
