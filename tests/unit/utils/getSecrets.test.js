@@ -5,8 +5,8 @@ jest.mock('@aws-sdk/client-secrets-manager', () => {
     SecretString: JSON.stringify({
       REDIS_USERNAME: 'test-user',
       REDIS_PASSWORD: 'test-pass',
-      REDIS_HOST: 'localhost',
-      PORT: '6379',
+      REDIS_HOST: 'mongodb://localhost:27017/test',
+      PORT: '13711',
       DB_CONNECTION: 'mongodb://localhost:27017/test',
     }),
   };

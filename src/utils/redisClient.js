@@ -9,11 +9,11 @@ class RedisClient {
 
   async initialize() {
     try {
-      const [username, password, host, port] = await Promise.all([
+      const port = '13711';
+      const [username, password, host] = await Promise.all([
         getSecret('REDIS_USERNAME'),
         getSecret('REDIS_PASSWORD'),
         getSecret('REDIS_HOST'),
-        getSecret('REDIS_PORT'),
       ]);
 
       this.client = createClient({
@@ -52,4 +52,4 @@ class RedisClient {
 
 const redisClient = new RedisClient();
 
-module.exports = redisClient;
+module.exports = { redisClient, RedisClient };
