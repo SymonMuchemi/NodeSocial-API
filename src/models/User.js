@@ -12,6 +12,10 @@ const UserSchema = Schema(
       unique: true,
       required: [true, 'Please add a username'],
     },
+    name: {
+      type: String,
+      required: [true, 'Please provide a name'],
+    },
     email: {
       type: String,
       unique: true,
@@ -29,7 +33,7 @@ const UserSchema = Schema(
     },
     role: {
       type: String,
-      enum: ['user', 'publisher'],
+      enum: ['user', 'admin'],
       default: 'user',
     },
     followers: [

@@ -14,7 +14,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
   }
 
   if (!token) {
-    return next(new ErrorResponse('Unauthorized access!', 401));
+    return next(new ErrorResponse('Unauthorized access', 401));
   }
 
   try {
@@ -34,7 +34,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
 exports.authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
-      return next(new ErrorResponse('Unauthorized access', 403));
+      return next(new ErrorResponse('Access forbidden', 403));
     }
     next();
   };
