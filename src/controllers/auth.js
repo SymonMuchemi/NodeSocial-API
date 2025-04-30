@@ -7,22 +7,17 @@ const crypto = require('crypto');
 // @route   POST /api/v1/auth/register
 // @access  Public
 exports.register = asyncHandler(async (req, res, next) => {
+  const { username, email, name, password } = req.body;
   const user = await User.create({
-    ...req.body,
+    username,
+    email,
+    name,
+    password,
   });
 
   // TODO: implement email feature with AWS Lamda
 
-  const message = `Hello ${user.name},
-
-  Thank you for registering at DevCamper. Your account has been successfully created.
-
-  Best regards,
-  The DevCamper Team`;
-
-  console.log('Registering user....');
-
-  sendTokenResponse(user, 200, res);
+  await sendTokenResponse(user, 200, res);
 });
 
 // @desc    login a new user
@@ -52,7 +47,7 @@ exports.login = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse('Invalid credentials', 401));
   }
 
-  sendTokenResponse(user, 200, res);
+  await sendTokenResponse(user, 200, res);
 });
 
 // @desc    get currect logged in user
@@ -183,8 +178,8 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 });
 
 // generate token and set cookie
-const sendTokenResponse = (user, statusCode, res) => {
-  const token = user.getSignedJwtToken();
+const sendTokenResponse = async (user, statusCode, res) => {
+  const token = await user.getSignedJwtToken();
 
   const options = {
     expire: new Date(
