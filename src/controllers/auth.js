@@ -2,6 +2,7 @@ const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const User = require('../models/User');
 const crypto = require('crypto');
+const { getSecret } = require('../utils/getSecrets');
 
 // @desc    register a new user
 // @route   POST /api/v1/auth/register
@@ -180,11 +181,12 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 // generate token and set cookie
 const sendTokenResponse = async (user, statusCode, res) => {
   const token = await user.getSignedJwtToken();
+  const JWT_COOKIE_EXPIRE = await getSecret('JWT_COOKIE_EXPIRE');
+
+  if (!JWT_COOKIE_EXPIRE) throw new Error('JWT cookie expiration undefined!');
 
   const options = {
-    expire: new Date(
-      Date.now + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
-    ),
+    expire: new Date(Date.now + JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
     httpOnly: true,
   };
 
