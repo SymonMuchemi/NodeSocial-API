@@ -69,15 +69,20 @@ UserSchema.pre('save', async function (next) {
 
 // sign JWT token and return
 UserSchema.methods.getSignedJwtToken = async function () {
-  const JWT_SECRET = await getSecret('JWT_SECRET');
-  const JWT_EXPIRE = await getSecret('JWT_EXPIRATION');
+  try {
+    const JWT_SECRET = await getSecret('JWT_SECRET');
+    const JWT_EXPIRE = await getSecret('JWT_EXPIRATION');
 
-  if (!JWT_SECRET) throw new ErrorResponse('JWT secret is undefined');
-  if (!JWT_EXPIRE) throw new ErrorResponse('JWT EXPIRE is undefined');
+    if (!JWT_SECRET) throw new ErrorResponse('JWT secret is undefined');
+    if (!JWT_EXPIRE) throw new ErrorResponse('JWT EXPIRE is undefined');
 
-  return jwt.sign({ id: this._id }, JWT_SECRET, {
-    expiresIn: JWT_EXPIRE,
-  });
+    return jwt.sign({ id: this._id }, JWT_SECRET, {
+      expiresIn: JWT_EXPIRE,
+    });
+  } catch (error) {
+    console.log(`User signing error: ${error.message}`);
+    throw new error(error.message);
+  }
 };
 
 // match user entered password to the hashed passwrod in the database
