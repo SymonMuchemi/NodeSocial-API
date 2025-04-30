@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index.js",
+    "dev": "nodemon server.js",
     "test": "jest --testPathPattern=tests/unit",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
