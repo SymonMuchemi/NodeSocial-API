@@ -21,8 +21,8 @@ describe('RedisClient', () => {
       username: 'testuser',
       password: 'testpass',
       socket: {
-        host: 'mongodb://localhost:27017/test',
-        port: 6379,
+        host: 'localhost',
+        port: "13711",
       },
     });
   });

@@ -9,7 +9,7 @@ class RedisClient {
 
   async initialize() {
     try {
-      const port = 13711;
+      const port = '13711';
       const [username, password, host] = await Promise.all([
         getSecret('REDIS_USERNAME'),
         getSecret('REDIS_PASSWORD'),
