@@ -1,7 +1,7 @@
 // a mock cache to simulate the caching behavior
 let cachedSecrets = {
-  REDIS_USERNAME: 'test-user',
-  REDIS_PASSWORD: 'test-password',
+  REDIS_USERNAME: 'testuser',
+  REDIS_PASSWORD: 'testpass',
   REDIS_HOST: 'localhost',
   PORT: '6379',
   DB_CONNECTION: 'mongodb://localhost:27017/test',
