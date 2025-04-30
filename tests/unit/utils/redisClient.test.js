@@ -1,5 +1,4 @@
-// ✅ Apply mocks BEFORE importing the module under test
-jest.mock('redis', () => require('../../mocks/redis'));
+jest.mock('redis', () => require('../../mocks/redis.mock'));
 jest.mock('../../../src/utils/getSecrets.js', () =>
   require('../../mocks/getSecrets.mock')
 );
