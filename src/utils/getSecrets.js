@@ -31,7 +31,6 @@ exports.getSecret = async (key) => {
 
   // If cache not available, fetch from AWS
   if (!cachedSecrets) {
-    console.log('Fetching secrets from AWS...');
     const command = new GetSecretValueCommand({
       SecretId: secret_name,
       VersionStage: 'AWSCURRENT',

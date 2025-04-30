@@ -13,7 +13,10 @@ const app = express();
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
 dotenv.config();
-connectDB();
+
+if (process.env.NODE_ENV !== 'test') {
+  connectDB();
+}
 
 if (NODE_ENV === 'development') {
   const morgan = require('morgan');
@@ -33,6 +36,5 @@ app.use(errorHandler);
 app.get('/', (req, res) => {
   res.status(200).json({ message: 'Hello from Nodesocial API' });
 });
-
 
 module.exports = app;

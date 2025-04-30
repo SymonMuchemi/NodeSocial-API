@@ -85,11 +85,11 @@ UserSchema.methods.getSignedJwtToken = async function () {
     });
   } catch (error) {
     console.log(`User signing error: ${error.message}`);
-    throw new error(error.message);
+    throw new Error(error.message);
   }
 };
 
-// match user entered password to the hashed passwrod in the database
+// match user entered password to the hashed password in the database
 UserSchema.methods.matchPassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
