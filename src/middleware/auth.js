@@ -3,27 +3,31 @@ const jwt = require('jsonwebtoken');
 const asyncHandler = require('./async');
 const ErrorResponse = require('../utils/errorResponse');
 const User = require('../models/User');
+const { getSecret } = require('../utils/getSecrets');
 
 exports.protect = asyncHandler(async (req, res, next) => {
-  let token;
+  const token = req.cookies.token;
 
-  if (req.cookies.token) {
-    token = req.cookies.token;
+  if (!req.cookies.token) {
+    console.log('Missing auth cookie!');
+    return next(new ErrorResponse('Missing auth token', 400));
   }
 
   if (!token) {
-    return next(new ErrorResponse('Unauthorized access', 401));
+    return next(new ErrorResponse('Unauthorized access!', 401));
   }
 
   try {
+    const JWT_SECRET = await getSecret('JWT_SECRET');
     // decode token
-    const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = await jwt.verify(token, JWT_SECRET);
 
     req.user = await User.findById(decoded.id);
 
     next();
   } catch (error) {
-    return next(new ErrorResponse('Unauthorized access', 401));
+    console.log(error.message);
+    return next(new ErrorResponse('Authentication error', 500));
   }
 });
 
