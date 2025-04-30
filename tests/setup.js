@@ -20,11 +20,6 @@ afterAll(async () => {
 });
 
 afterEach(async () => {
-  const collections = mongoose.connection.collections;
-
-  for (const key in collections) {
-    await collections[key].deleteMany({});
-  }
-
-  mongoose.deleteModel(/.+/); // Deregister all Mongoose models
+  await mongoose.connection.dropDatabase();
+  mongoose.deleteModel(/.+/);
 });
