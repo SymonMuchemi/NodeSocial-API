@@ -70,13 +70,13 @@ UserSchema.pre('save', async function (next) {
 // sign JWT token and return
 UserSchema.methods.getSignedJwtToken = async function () {
   const JWT_SECRET = await getSecret('JWT_SECRET');
-  const JWT_EXPIRE = await getSecret('JWT_EXPIRE');
+  const JWT_EXPIRE = await getSecret('JWT_EXPIRATION');
 
-  if (!JWT_SECRET) throw new ErrorResponse('JWT secret anavailable');
-  if (!JWT_EXPIRE) throw new ErrorResponse('JWT EXPIRE anavailable');
+  if (!JWT_SECRET) throw new ErrorResponse('JWT secret is undefined');
+  if (!JWT_EXPIRE) throw new ErrorResponse('JWT EXPIRE is undefined');
 
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
+  return jwt.sign({ id: this._id }, JWT_SECRET, {
+    expiresIn: JWT_EXPIRE,
   });
 };
 
