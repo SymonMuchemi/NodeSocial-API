@@ -48,6 +48,30 @@ describe('User model', () => {
     expect(err.errors.email).toBeDefined();
     expect(err.errors.password).toBeDefined();
   });
+
+  test("should create user with default role set to 'user'", async () => {
+    const user = new User(userData);
+    const savedUser = await user.save();
+
+    expect(savedUser._id).toBeDefined();
+    expect(savedUser.role).toBe('user');
+  });
+
+  test('should not create user with role other than user or admin', async () => {
+    const user = new User({ ...userData, role: 'tester' });
+
+    let err;
+
+    try {
+      await user.save();
+    } catch (error) {
+      err = error;
+    }
+
+    expect(err).toBeDefined();
+    expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
+    expect(err.errors.role).toBeDefined();
+  });
 });
 
 describe('User methods', () => {
