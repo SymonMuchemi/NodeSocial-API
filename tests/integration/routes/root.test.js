@@ -3,9 +3,9 @@ const app = require('../../../src/app.js');
 const { connectDB } = require('../../../src/config/db.js');
 const { default: mongoose } = require('mongoose');
 
-beforeAll(async () => {
-  await connectDB();
-});
+// beforeAll(async () => {
+//   await connectDB();
+// });
 
 afterAll(async () => {
   await mongoose.connection.close();
