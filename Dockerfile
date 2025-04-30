@@ -19,4 +19,4 @@ EXPOSE 3001
 ENV NODE_ENV=production
 
 # Start the application
-CMD [ "node", "src/index.js" ]
+CMD [ "node", "server.js" ]
