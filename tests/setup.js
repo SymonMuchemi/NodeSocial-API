@@ -15,8 +15,8 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await mongoose.connection.dropDatabase();
-  await mongoose.connections.close();
-  await mongoose.stop();
+  await mongoose.connection.close();
+  await mongoServer.stop();
 });
 
 afterEach(async () => {
@@ -25,4 +25,6 @@ afterEach(async () => {
   for (const key in collections) {
     await collections[key].deleteMany({});
   }
+
+  mongoose.deleteModel(/.+/); // Deregister all Mongoose models
 });
