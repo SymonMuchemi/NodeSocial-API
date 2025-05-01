@@ -38,7 +38,7 @@ describe('Auth controller - register user', () => {
 });
 
 describe('Auth controller - user authentication', () => {
-  test('should log user in sucessfully', async () => {
+  test('should log user in successfully', async () => {
     // register user
     await request(app).post(REG_ROUTE).send(userData);
 
