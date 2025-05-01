@@ -4,6 +4,7 @@ const app = require('../../../src/app.js');
 const AUTH_ROUTE = '/api/v1/auth';
 const REG_ROUTE = AUTH_ROUTE + '/register';
 const LOGIN_ROUTE = AUTH_ROUTE + '/login';
+const GET_ME_ROUTE = AUTH_ROUTE + '/me';
 
 const userData = {
   username: 'JohnDoe',
@@ -76,7 +77,7 @@ describe('Auth controller - user authentication', () => {
     expect(res.statusCode).toBe(401);
     expect(res.body.success).toBeFalsy();
     expect(res.body.token).toBeUndefined();
-    expect(res.body.error).toMatch(/Invalid credentials/)
+    expect(res.body.error).toMatch(/Invalid credentials/);
   });
 
   test('should return the same error message when password or email is incorrect', async () => {
@@ -93,5 +94,28 @@ describe('Auth controller - user authentication', () => {
     expect(wrongEmailRes.statusCode).toEqual(wrongPasswordRes.statusCode);
     expect(wrongEmailRes.body.success).toEqual(wrongPasswordRes.body.success);
     expect(wrongEmailRes.body.error).toEqual(wrongPasswordRes.body.error);
+  });
+});
+
+describe('Auth controller - get logged in user', () => {
+  test('should return logged in user details correctly', async () => {
+    // register user to set req.user
+    const registerRes = await request(app).post(REG_ROUTE).send(userData);
+
+    // extract token from the response
+    const token = registerRes.body.token;
+
+    const res = await request(app)
+      .get(GET_ME_ROUTE)
+      .set('Cookie', [`token=${token}`]); // set the token in the cookie
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.success).toBeTruthy();
+
+    const resData = res.body.data;
+
+    expect(resData).toBeDefined();
+    expect(resData.username).toEqual(userData.username);
+    expect(resData.email).toEqual(userData.email);
   });
 });
