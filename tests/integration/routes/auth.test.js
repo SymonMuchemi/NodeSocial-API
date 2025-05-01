@@ -118,4 +118,12 @@ describe('Auth controller - get logged in user', () => {
     expect(resData.username).toEqual(userData.username);
     expect(resData.email).toEqual(userData.email);
   });
+
+  test('shourld return error if user is not logged in', async () => {
+    const res = await request(app).get(GET_ME_ROUTE);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.success).toBeFalsy();
+    expect(res.body.error).toMatch('Missing auth token');
+  });
 });
