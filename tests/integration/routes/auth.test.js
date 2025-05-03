@@ -5,6 +5,7 @@ const AUTH_ROUTE = '/api/v1/auth';
 const REG_ROUTE = AUTH_ROUTE + '/register';
 const LOGIN_ROUTE = AUTH_ROUTE + '/login';
 const GET_ME_ROUTE = AUTH_ROUTE + '/me';
+const LOGOUT_ROUTE = AUTH_ROUTE + '/logout';
 
 const userData = {
   username: 'JohnDoe',
@@ -125,5 +126,36 @@ describe('Auth controller - get logged in user', () => {
     expect(res.statusCode).toBe(400);
     expect(res.body.success).toBeFalsy();
     expect(res.body.error).toMatch('Missing auth token');
+  });
+});
+
+describe('Auth controller - logging out', () => {
+  test('should clear token on logout', async () => {
+    await request(app).post(REG_ROUTE).send(userData);
+
+    const res = await request(app).post(LOGIN_ROUTE).send({
+      email: userData.email,
+      password: userData.password,
+    });
+
+    // confirm auth cookie is valid
+    const cookiesBefore = res.headers['set-cookie'];
+
+    expect(cookiesBefore).toBeDefined();
+    expect(
+      cookiesBefore.some((cookie) => cookie.startsWith('token='))
+    ).toBeTruthy();
+
+    const token = res.body.token;
+
+    // logout user
+    const logoutRes = await request(app)
+      .get(GET_ME_ROUTE)
+      .set('Cookie', [`token=${token}`]);
+
+    // confirm token cookie is deleted
+    const cookieAfter = logoutRes.headers['set-cookie'];
+
+    expect(cookieAfter).not.toBeDefined();
   });
 });
