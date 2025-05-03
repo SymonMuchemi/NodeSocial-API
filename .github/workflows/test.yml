@@ -1,0 +1,22 @@
+name: Run Tests
+
+on:
+  pull_request:
+    branches: ['main']
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-actions@v3
+      
+      - name: Build test image
+        run: docker build -f DockerFile.test -t nodesocial-server:test .
+      
+      - name: Run tests in Docker container
+        run: docker run --rm nodesocial-server:test
