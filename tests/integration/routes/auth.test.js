@@ -6,6 +6,7 @@ const REG_ROUTE = AUTH_ROUTE + '/register';
 const LOGIN_ROUTE = AUTH_ROUTE + '/login';
 const GET_ME_ROUTE = AUTH_ROUTE + '/me';
 const LOGOUT_ROUTE = AUTH_ROUTE + '/logout';
+const UPDATE_PWD_ROUTE = AUTH_ROUTE + '/updatepassword';
 
 const userData = {
   username: 'JohnDoe',
@@ -150,12 +151,51 @@ describe('Auth controller - logging out', () => {
 
     // logout user
     const logoutRes = await request(app)
-      .get(GET_ME_ROUTE)
+      .get(LOGOUT_ROUTE)
       .set('Cookie', [`token=${token}`]);
 
     // confirm token cookie is deleted
     const cookieAfter = logoutRes.headers['set-cookie'];
 
-    expect(cookieAfter).not.toBeDefined();
+    expect(cookieAfter).toBeDefined();
+    expect(
+      cookieAfter.some((cookie) => cookie.startsWith('token=none'))
+    ).toBeTruthy();
+  });
+});
+
+describe('Auth controller - update user', () => {
+  test('updates user password successfully', async () => {
+    const res = await request(app).post(REG_ROUTE).send(userData);
+    const token = res.body.token;
+
+    const updateRes = await request(app)
+      .put(UPDATE_PWD_ROUTE)
+      .set('Cookie', [`token=${token}`])
+      .send({
+        currentPassword: userData.password,
+        newPassword: 'new passcode 1223',
+      });
+
+    expect(updateRes.statusCode).toBe(200);
+    expect(updateRes.body.success).toBeTruthy();
+    expect(updateRes.body.token).toBeDefined();
+  });
+
+  test('returns correct response on password mismatch', async () => {
+    const res = await request(app).post(REG_ROUTE).send(userData);
+    const token = res.body.token;
+
+    const updateRes = await request(app)
+      .put(UPDATE_PWD_ROUTE)
+      .set('Cookie', [`token=${token}`])
+      .send({
+        currentPassword: 'A wrong password',
+        newPassword: 'new passcode 1223',
+      });
+
+    expect(updateRes.statusCode).toBe(400);
+    expect(updateRes.body.success).toBeFalsy();
+    expect(updateRes.body.error).toMatch('Invalid password');
   });
 });
