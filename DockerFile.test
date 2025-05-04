@@ -1,20 +1,22 @@
 FROM node:slim
 
-# set working directory in the container
+# set the working directory in the container
 WORKDIR /app
 
 # copy package.json and package-lock.json
-COPY package*.json pnpm-lock.yaml* ./
+COPY package*.json ./
 
-# install pnpm
-RUN npm install -g pnpm
+# Install dependencies
+RUN npm install --only=production
 
-# install dependencies
-RUN pnpm install
-
-# copy the rest of the application
+# Copy the rest of the application
 COPY . .
 
-# Run tests
-CMD [ "pnpm", "test" ]
+# Expose the port the application will be running on
+EXPOSE 3001
 
+# Set environment variables
+ENV NODE_ENV=production
+
+# Start the application
+CMD [ "npm", "test" ]

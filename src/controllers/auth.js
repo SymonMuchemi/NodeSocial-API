@@ -18,7 +18,7 @@ exports.register = asyncHandler(async (req, res, next) => {
 
   // TODO: implement email feature with AWS Lamda
 
-  await sendTokenResponse(user, 200, res);
+  await sendTokenResponse(user, 201, res);
 });
 
 // @desc    login a new user
