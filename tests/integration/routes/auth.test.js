@@ -7,6 +7,7 @@ const LOGIN_ROUTE = AUTH_ROUTE + '/login';
 const GET_ME_ROUTE = AUTH_ROUTE + '/me';
 const LOGOUT_ROUTE = AUTH_ROUTE + '/logout';
 const UPDATE_PWD_ROUTE = AUTH_ROUTE + '/updatepassword';
+const UPDATE_DETAILS_ROUTE = AUTH_ROUTE + '/updatedetails';
 
 const userData = {
   username: 'JohnDoe',
@@ -197,5 +198,27 @@ describe('Auth controller - update user', () => {
     expect(updateRes.statusCode).toBe(400);
     expect(updateRes.body.success).toBeFalsy();
     expect(updateRes.body.error).toMatch('Invalid password');
+  });
+});
+
+describe('Auth controller - update details', () => {
+  test('should update user details successfully', async () => {
+    const res = await request(app).post(REG_ROUTE).send(userData);
+    const token = res.body.token;
+
+    const updateDetails = {
+      name: 'John Doe Miguel',
+      email: 'Miguel.john@doe.foo',
+    };
+
+    const updateRes = await request(app)
+      .put(UPDATE_DETAILS_ROUTE)
+      .set('Cookie', [`token=${token}`])
+      .send(updateDetails);
+
+    expect(updateRes.statusCode).toBe(200);
+    expect(updateRes.body.data).toBeDefined();
+    expect(updateRes.body.data.name).toEqual(updateDetails.name);
+    expect(updateRes.body.data.email).toEqual(updateDetails.email);
   });
 });
