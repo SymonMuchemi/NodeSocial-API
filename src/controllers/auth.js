@@ -113,33 +113,6 @@ exports.updateDetails = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc    reset user pasword
-// @route   PUT /api/v1/auth/resetpassword/:resettoken
-// @access  Public
-exports.resetpassword = asyncHandler(async (req, res, next) => {
-  // get hashed token
-  const resetPasswordToken = crypto
-    .createHash('sha256')
-    .update(req.params.resettoken)
-    .digest('hex');
-
-  const user = await User.findOne({
-    resetPasswordToken,
-    resetPasswordExpire: { $gt: Date.now() },
-  });
-
-  if (!user) return next(new ErrorResponse('Invalid token', 400));
-
-  user.password = req.body.password;
-
-  user.resetPasswordExpire = undefined;
-  user.resetPasswordToken = undefined;
-
-  await user.save();
-
-  sendTokenResponse(user, 200, res);
-});
-
 // @desc    Forgot password
 // @route   GET /api/v1/auth/forgotpassword
 // @access  Public
