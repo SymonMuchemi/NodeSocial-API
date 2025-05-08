@@ -5,7 +5,7 @@ const {
 } = require('@aws-sdk/client-s3');
 const { getSecret } = require('../utils/getSecrets.js');
 
-exports.uploadImageToS3 = async (fileBuffer, fileName, mimeType) => {
+exports.uploadFileToS3 = async (fileBuffer, fileName, mimeType) => {
   try {
     const client = await initS3Client();
     const bucketName = await getSecret('S3_BUCKET_NAME');
